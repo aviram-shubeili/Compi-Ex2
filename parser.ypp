@@ -1,0 +1,11 @@
+%{
+/* Definitions section */
+#include "output.hpp"
+#include "source.hpp"
+%}
+
+/* Declarations */
+%%
+/* Rules */
+%%
+/* C user routines */
