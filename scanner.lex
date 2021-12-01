@@ -4,6 +4,7 @@
 #include "output.hpp"
 #include "source.hpp"
 %}
+
 %option yylineno
 %option noyywrap
 

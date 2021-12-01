@@ -64,3 +64,4 @@ void output::errorLex(const int lineno) {
 void output::errorSyn(const int lineno) {
     std::cout << "line " << lineno << ": syntax error\n";
 }
+
