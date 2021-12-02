@@ -1,6 +1,6 @@
 #include <string>
-
-typedef enum reloptype {
+#include <stdexcept>
+enum reloptype {
     EQUALS,
     NOT_EQUALS,
     SMALLER,
@@ -8,7 +8,7 @@ typedef enum reloptype {
     SMALLER_EQUALS,
     BIGGER_EQUALS
 };
-typedef enum binoptype {
+enum binoptype {
     PLUS,
     MINUS,
     MUL,
@@ -16,13 +16,14 @@ typedef enum binoptype {
 };
 
 struct Node {
-    
-    virtual std::string prettyPrint();
+    int lineno;
+    Node(int num) : lineno(num) {}
 };
 
 class Relop : public Node {
+public:
     enum reloptype type;
-    Relop(std::string value) {
+    Relop(std::string value, int num) : Node(num){
         if(value == "<") type = SMALLER;
         else if(value == ">") type = BIGGER;
         else if(value == ">=") type = BIGGER_EQUALS;
@@ -33,8 +34,9 @@ class Relop : public Node {
     }
 };
 class Binop : public Node {
+public:
     enum binoptype type;
-    Binop(std::string value) {
+    Binop(std::string value, int num) : Node(num) {
         if (value == "+") type = PLUS;
         else if (value == "-") type = MINUS;
         else if (value == "*") type = MUL;
@@ -42,25 +44,26 @@ class Binop : public Node {
         else throw std::invalid_argument("wrong Binop");
     }
 };
-class ID : public Node {
+class Id : public Node {
+public:
     std::string value;
-    ID(std::string text) : value(text) {}
+    Id(std::string text, int num) : Node(num), value(text) {}
 };
 
 class Num : public Node {
 private:
     std::string value;
 public:
-    Num(std::string text) : value(text) {}
+    Num(std::string text, int num) : Node(num), value(text) {}
     long long getNumber() {
         return std::stoll(value);
     }
 };
 
 class String : public Node {
+public:
     std::string value;
-    String(std::string text) : value(text) {}
+    String(std::string text, int num) : Node(num), value(text) {}
 };
 
 #define YYSTYPE Node*
-

@@ -1,45 +1,49 @@
 %{
 /* Definitions section */
-#include "source.tab.hpp"
-#include "output.hpp"
 #include "source.hpp"
+#include "parser.tab.hpp"
+#include "output.hpp"
 %}
 
 %option yylineno
 %option noyywrap
-
-relop (==|!=|<|>|<=|>=)
-binop (\+|\-|\*|\/)
+whitespace      ([\t\n\r ])
+relop           (==|!=|<|>|<=|>=)
+muldiv_binop    (\*|\/)
+addsub_binop    (\+|\-)
 
 
 %%
-void                                                       { return VOID;                                  }
-int                                                        { return INT;                                   }
-byte                                                       { return BYTE;                                  }
-b                                                          { return B;                                     }
-bool                                                       { return BOOL;                                  }
-const                                                      { return CONST;                                 }
-and                                                        { return AND;                                   }
-or                                                         { return OR;                                    }
-not                                                        { return NOT;                                   }
-true                                                       { return TRUE;                                  }
-false                                                      { return FALSE;                                 }
-return                                                     { return RETURN;                                }
-if                                                         { return IF;                                    }
-else                                                       { return ELSE;                                  }
-while                                                      { return WHILE;                                 }
-break                                                      { return BREAK;                                 }
-continue                                                   { return CONTINUE;                              }
-;                                                          { return SC;                                    }
-,                                                          { return COMMA;                                 }
-\(                                                         { return LPAREN;                                }
-\)                                                         { return RPAREN;                                }
-\{                                                         { return LBRACE;                                }
-\}                                                         { return RBRACE;                                }
-=                                                          { return ASSIGN;                                }
-{relop}                                                    { yylval = new Relop(yytext); return RELOP;     }
-{binop}                                                    { yylval = new Binop(yytext); return BINOP;     }
-[a-zA-Z][a-zA-Z0-9]*                                       { yylval = new ID(yytext); return ID;           }
-0|[1-9][0-9]*                                              { yylval = new Num(yytext); return NUM;         }
-\"([^\n\r\"\\]|\\[rnt\"\\])+\"                             { yylval = new String(yytext); return STRING;   }
  /* Rules section*/
+void                                                       { yylval = new Node(yylineno) ;return VOID;                                  }
+int                                                        { yylval = new Node(yylineno); return INT;                                   }
+byte                                                       { yylval = new Node(yylineno); return BYTE;                                  }
+b                                                          { yylval = new Node(yylineno); return B;                                     }
+bool                                                       { yylval = new Node(yylineno); return BOOL;                                  }
+const                                                      { yylval = new Node(yylineno); return CONST;                                 }
+and                                                        { yylval = new Node(yylineno); return AND;                                   }
+or                                                         { yylval = new Node(yylineno); return OR;                                    }
+not                                                        { yylval = new Node(yylineno); return NOT;                                   }
+true                                                       { yylval = new Node(yylineno); return TRUE;                                  }
+false                                                      { yylval = new Node(yylineno); return FALSE;                                 }
+return                                                     { yylval = new Node(yylineno); return RETURN;                                }
+if                                                         { yylval = new Node(yylineno); return IF;                                    }
+else                                                       { yylval = new Node(yylineno); return ELSE;                                  }
+while                                                      { yylval = new Node(yylineno); return WHILE;                                 }
+break                                                      { yylval = new Node(yylineno); return BREAK;                                 }
+continue                                                   { yylval = new Node(yylineno); return CONTINUE;                              }
+;                                                          { yylval = new Node(yylineno); return SC;                                    }
+,                                                          { yylval = new Node(yylineno); return COMMA;                                 }
+\(                                                         { yylval = new Node(yylineno); return LPAREN;                                }
+\)                                                         { yylval = new Node(yylineno); return RPAREN;                                }
+\{                                                         { yylval = new Node(yylineno); return LBRACE;                                }
+\}                                                         { yylval = new Node(yylineno); return RBRACE;                                }
+=                                                          { yylval = new Node(yylineno); return ASSIGN;                                }
+{relop}                                                    { yylval = new Relop(yytext, yylineno); return RELOP;                        }
+{muldiv_binop}                                             { yylval = new Binop(yytext, yylineno); return MULDIV_BINOP;                 }
+{addsub_binop}                                             { yylval = new Binop(yytext, yylineno); return ADDSUB_BINOP;                 }
+[a-zA-Z][a-zA-Z0-9]*                                       { yylval = new Id(yytext, yylineno); return ID;                              }
+0|[1-9][0-9]*                                              { yylval = new Num(yytext, yylineno); return NUM;                            }
+\"([^\n\r\"\\]|\\[rnt\"\\])+\"                             { yylval = new String(yytext, yylineno); return STRING;                      }
+{whitespace}|(\/\/[^\r\n]*[ \r|\n|\r\n]?)                  {                                                                            }
+.                                                          { output::errorLex(yylineno); exit(0);                                       }

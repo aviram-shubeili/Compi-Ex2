@@ -2,89 +2,111 @@
 /* Definitions section */
 #include "output.hpp"
 #include "source.hpp"
-%}
+extern int yylineno;
+int yylex();
+void yyerror(const char*);
+#define YYERROR_VERBOSE 1
+#define YYDEBUG 1
 
+%}
 /* Declarations */
+
+%token ID
+%token NUM
+%token STRING
+
 %token VOID
 %token INT
 %token BYTE
 %token B
 %token BOOL
 %token CONST
-%token AND
-%token OR
-%token NOT
 %token TRUE
 %token FALSE
 %token RETURN
-%token IF
 %token ELSE
+%token IF
 %token WHILE
 %token BREAK
 %token CONTINUE
 %token SC
-%token COMMA                             
-%token LPAREN                            
-%token RPAREN                            
+%token COMMA
+%right ASSIGN
+
+%left OR
+
+%left AND
+
+%nonassoc RELOP
+
+%left ADDSUB_BINOP
+%left MULDIV_BINOP
+
+%left NOT
+
+
+%left LPAREN
+%left RPAREN
 %token LBRACE
 %token RBRACE
-%token ASSIGN
-%token RELOP
-%token BINOP
-%token ID
-%token NUM
-%token STRING
-
 %%
 /* Rules */
-Program: Funcs                                                          ;
-Funcs: /*epsilon*/                                                      ;
-Funcs: FuncDecl Funcs                                                   ;
-FuncDecl: RetType ID LPAREN Formals RPAREN LBRACE Statements RBRACE     ;
-RetType: Type                                                           ;
-RetType:  VOID                                                          ;
-Formals: /*epsilon*/                                                    ;
-Formals: FormalsList                                                    ;
-FormalsList: FormalDecl                                                 ;
-FormalsList: FormalDecl COMMA FormalsList                               ;
-FormalDecl: TypeAnnotation Type ID                                      ;
-Statements: Statement                                                   ;
-Statements: Statements Statement                                        ;
-Statement: LBRACE Statements RBRACE                                     ;
-Statement: TypeAnnotation Type ID SC                                    ;
-Statement: TypeAnnotation Type ID ASSIGN Exp SC                         ;
-Statement: ID ASSIGN Exp SC                                             ;
-Statement: Call SC                                                      ;
-Statement: RETURN SC                                                    ;
-Statement: RETURN Exp SC                                                ;
-Statement: IF LPAREN Exp RPAREN Statement                               ;
-Statement: IF LPAREN Exp RPAREN Statement ELSE Statement                ;
-Statement: WHILE LPAREN Exp RPAREN Statement                            ;
-Statement: BREAK SC                                                     ;
-Statement: CONTINUE SC                                                  ;
-Call: ID LPAREN ExpList RPAREN                                          ;
-Call: ID LPAREN RPAREN                                                  ;
-ExpList: Exp                                                            ;
-ExpList: Exp COMMA ExpList                                              ;
-Type: INT                                                               ;
-Type: BYTE                                                              ;
-Type: BOOL                                                              ;
-TypeAnnotation: /*epsilon*/                                             ;
-TypeAnnotation: CONST                                                   ;
-Exp: LPAREN Exp RPAREN                                                  ;
-Exp: Exp BINOP Exp                                                      ;
-Exp: ID                                                                 ;
-Exp: Call                                                               ;
-Exp: NUM                                                                ;
-Exp: NUM B                                                              ;
-Exp: STRING                                                             ;
-Exp: TRUE                                                               ;
-Exp: FALSE                                                              ;
-Exp: NOT Exp                                                            ;
-Exp: Exp AND Exp                                                        ;
-Exp: Exp OR Exp                                                         ;
-Exp: Exp RELOP Exp                                                      ;
-Exp: LPAREN TypeAnnotation Type RPAREN Exp                              ;
+Program: Funcs                                                          { output::printProductionRule(1); } ;
+Funcs: /*epsilon*/                                                      { output::printProductionRule(2); } ;
+Funcs: FuncDecl Funcs                                                   { output::printProductionRule(3); } ;
+FuncDecl: RetType ID LPAREN Formals RPAREN LBRACE Statements RBRACE     { output::printProductionRule(4); } ;
+RetType: Type                                                           { output::printProductionRule(5); } ;
+RetType:  VOID                                                          { output::printProductionRule(6); } ;
+Formals: /*epsilon*/                                                    { output::printProductionRule(7); } ;
+Formals: FormalsList                                                    { output::printProductionRule(8); } ;
+FormalsList: FormalDecl                                                 { output::printProductionRule(9); } ;
+FormalsList: FormalDecl COMMA FormalsList                               { output::printProductionRule(10); } ;
+FormalDecl: TypeAnnotation Type ID                                      { output::printProductionRule(11); } ;
+Statements: Statement                                                   { output::printProductionRule(12); } ;
+Statements: Statements Statement                                        { output::printProductionRule(13); } ;
+Statement: LBRACE Statements RBRACE                                     { output::printProductionRule(14); } ;
+Statement: TypeAnnotation Type ID SC                                    { output::printProductionRule(15); } ;
+Statement: TypeAnnotation Type ID ASSIGN Exp SC                         { output::printProductionRule(16); } ;
+Statement: ID ASSIGN Exp SC                                             { output::printProductionRule(17); } ;
+Statement: Call SC                                                      { output::printProductionRule(18); } ;
+Statement: RETURN SC                                                    { output::printProductionRule(19); } ;
+Statement: RETURN Exp SC                                                { output::printProductionRule(20); } ;
+Statement: %prec IF LPAREN Exp RPAREN Statement                               { output::printProductionRule(21); } ;
+Statement:  IF LPAREN Exp RPAREN Statement ELSE Statement          { output::printProductionRule(22); } ;
+Statement: WHILE LPAREN Exp RPAREN Statement                            { output::printProductionRule(23); } ;
+Statement: BREAK SC                                                     { output::printProductionRule(24); } ;
+Statement: CONTINUE SC                                                  { output::printProductionRule(25); } ;
+Call: ID LPAREN ExpList RPAREN                                          { output::printProductionRule(26); } ;
+Call: ID LPAREN RPAREN                                                  { output::printProductionRule(27); } ;
+ExpList: Exp                                                            { output::printProductionRule(28); } ;
+ExpList: Exp COMMA ExpList                                              { output::printProductionRule(29); } ;
+Type: INT                                                               { output::printProductionRule(30); } ;
+Type: BYTE                                                              { output::printProductionRule(31); } ;
+Type: BOOL                                                              { output::printProductionRule(32); } ;
+TypeAnnotation: /*epsilon*/                                             { output::printProductionRule(33); } ;
+TypeAnnotation: CONST                                                   { output::printProductionRule(34); } ;
+Exp: LPAREN Exp RPAREN                                                  { output::printProductionRule(35); } ;
+Exp: Exp MULDIV_BINOP Exp                                               { output::printProductionRule(36); } ;
+Exp: Exp ADDSUB_BINOP Exp                                               { output::printProductionRule(36); } ;
+Exp: ID                                                                 { output::printProductionRule(37); } ;
+Exp: Call                                                               { output::printProductionRule(38); } ;
+Exp: NUM                                                                { output::printProductionRule(39); } ;
+Exp: NUM B                                                              { output::printProductionRule(40); } ;
+Exp: STRING                                                             { output::printProductionRule(41); } ;
+Exp: TRUE                                                               { output::printProductionRule(42); } ;
+Exp: FALSE                                                              { output::printProductionRule(43); } ;
+Exp: NOT Exp                                                            { output::printProductionRule(44); } ;
+Exp: Exp AND Exp                                                        { output::printProductionRule(45); } ;
+Exp: Exp OR Exp                                                         { output::printProductionRule(46); } ;
+Exp: Exp RELOP Exp                                                      { output::printProductionRule(47); } ;
+Exp: LPAREN TypeAnnotation Type RPAREN Exp                              { output::printProductionRule(48); } ;
 %%
 /* C user routines */
-
+int main() {
+   // yydebug = 1;
+    return yyparse();
+}
+void yyerror(char const* msg) {
+    output::errorSyn(((Node*) yylval)->lineno);
+    exit(0);
+}
