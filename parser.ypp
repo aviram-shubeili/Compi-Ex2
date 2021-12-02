@@ -23,9 +23,9 @@
 %token BREAK
 %token CONTINUE
 %token SC
-%token COMMA
-%token LPAREN
-%token RPAREN
+%token COMMA                             
+%token LPAREN                            
+%token RPAREN                            
 %token LBRACE
 %token RBRACE
 %token ASSIGN
@@ -87,3 +87,4 @@ Exp: Exp RELOP Exp                                                      ;
 Exp: LPAREN TypeAnnotation Type RPAREN Exp                              ;
 %%
 /* C user routines */
+
