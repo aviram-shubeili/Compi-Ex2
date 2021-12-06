@@ -8,7 +8,8 @@
 %option yylineno
 %option noyywrap
 whitespace      ([\t\n\r ])
-relop           (==|!=|<|>|<=|>=)
+relational           (<|>|<=|>=)
+equality           (==|!=)
 muldiv_binop    (\*|\/)
 addsub_binop    (\+|\-)
 
@@ -39,7 +40,8 @@ continue                                                   { yylval = new Node(y
 \{                                                         { yylval = new Node(yylineno); return LBRACE;                                }
 \}                                                         { yylval = new Node(yylineno); return RBRACE;                                }
 =                                                          { yylval = new Node(yylineno); return ASSIGN;                                }
-{relop}                                                    { yylval = new Relop(yytext, yylineno); return RELOP;                        }
+{relational}                                               { yylval = new Relop(yytext, yylineno); return RELATIONAL;                   }
+{equality}                                                 { yylval = new Relop(yytext, yylineno); return EQUALITY;                     }
 {muldiv_binop}                                             { yylval = new Binop(yytext, yylineno); return MULDIV_BINOP;                 }
 {addsub_binop}                                             { yylval = new Binop(yytext, yylineno); return ADDSUB_BINOP;                 }
 [a-zA-Z][a-zA-Z0-9]*                                       { yylval = new Id(yytext, yylineno); return ID;                              }

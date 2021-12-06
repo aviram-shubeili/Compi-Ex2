@@ -5,8 +5,6 @@
 extern int yylineno;
 int yylex();
 void yyerror(const char*);
-#define YYERROR_VERBOSE 1
-#define YYDEBUG 1
 
 %}
 /* Declarations */
@@ -24,8 +22,8 @@ void yyerror(const char*);
 %token TRUE
 %token FALSE
 %token RETURN
-%token ELSE
-%token IF
+%nonassoc IF
+%nonassoc ELSE
 %token WHILE
 %token BREAK
 %token CONTINUE
@@ -37,7 +35,8 @@ void yyerror(const char*);
 
 %left AND
 
-%nonassoc RELOP
+%left EQUALITY
+%nonassoc RELATIONAL
 
 %left ADDSUB_BINOP
 %left MULDIV_BINOP
@@ -71,8 +70,8 @@ Statement: ID ASSIGN Exp SC                                             { output
 Statement: Call SC                                                      { output::printProductionRule(18); } ;
 Statement: RETURN SC                                                    { output::printProductionRule(19); } ;
 Statement: RETURN Exp SC                                                { output::printProductionRule(20); } ;
-Statement: %prec IF LPAREN Exp RPAREN Statement                               { output::printProductionRule(21); } ;
-Statement:  IF LPAREN Exp RPAREN Statement ELSE Statement          { output::printProductionRule(22); } ;
+Statement: IF LPAREN Exp RPAREN Statement %prec IF                      { output::printProductionRule(21); } ;
+Statement: IF LPAREN Exp RPAREN Statement ELSE Statement                { output::printProductionRule(22); } ;
 Statement: WHILE LPAREN Exp RPAREN Statement                            { output::printProductionRule(23); } ;
 Statement: BREAK SC                                                     { output::printProductionRule(24); } ;
 Statement: CONTINUE SC                                                  { output::printProductionRule(25); } ;
@@ -98,12 +97,13 @@ Exp: FALSE                                                              { output
 Exp: NOT Exp                                                            { output::printProductionRule(44); } ;
 Exp: Exp AND Exp                                                        { output::printProductionRule(45); } ;
 Exp: Exp OR Exp                                                         { output::printProductionRule(46); } ;
-Exp: Exp RELOP Exp                                                      { output::printProductionRule(47); } ;
+Exp: Exp RELATIONAL Exp                                                      { output::printProductionRule(47); } ;
+Exp: Exp EQUALITY Exp                                                      { output::printProductionRule(47); } ;
 Exp: LPAREN TypeAnnotation Type RPAREN Exp                              { output::printProductionRule(48); } ;
 %%
+
 /* C user routines */
 int main() {
-   // yydebug = 1;
     return yyparse();
 }
 void yyerror(char const* msg) {
