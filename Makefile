@@ -10,17 +10,17 @@ clean:
 	rm -f hw2
 
 run: all
-	./hw2 < hw2-tests/t1.in > hw2-tests/t1.my
-	./hw2 < hw2-tests/t2.in > hw2-tests/t2.my
-	./hw2 < input_files/t3.in > input_files/t3.my
-	./hw2 < input_files/t4.in > input_files/t4.my
-	./hw2 < input_files/t5.in > input_files/t5.my
-	./hw2 < input_files/t6.in > input_files/t6.my
-	./hw2 < input_files/t7.in > input_files/t7.my
-	./hw2 < input_files/t8.in > input_files/t8.my
-	./hw2 < input_files/t9.in > input_files/t9.my
-	./hw2 < input_files/t10.in > input_files/t10.my
-	./hw2 < input_files/t11.in > input_files/t11.my
+	./hw2 < hw2-tests/t1.in 2>&1 > hw2-tests/t1.my
+	./hw2 < hw2-tests/t2.in 2>&1 > hw2-tests/t2.my
+	./hw2 < input_files/t3.in 2>&1 > input_files/t3.my
+	./hw2 < input_files/t4.in 2>&1 > input_files/t4.my
+	./hw2 < input_files/t5.in 2>&1 > input_files/t5.my
+	./hw2 < input_files/t6.in 2>&1 > input_files/t6.my
+	./hw2 < input_files/t7.in 2>&1 > input_files/t7.my
+	./hw2 < input_files/t8.in 2>&1 > input_files/t8.my
+	./hw2 < input_files/t9.in 2>&1 > input_files/t9.my
+	./hw2 < input_files/t10.in 2>&1 > input_files/t10.my
+	./hw2 < input_files/t11.in 2>&1 > input_files/t11.my
 
 check: run
 	diff -s hw2-tests/t1.out hw2-tests/t1.my
